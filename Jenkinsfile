@@ -40,6 +40,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
+                withKubeConfig([credentialsId: 'k8scred']) {
                 script {
                     // Assuming kubectl is installed locally in the Jenkins environment
                     sh '''
@@ -51,8 +52,6 @@ pipeline {
         }
     }
 }
-
-        
         // stage ('Deploy to Cluster') {
         //     steps {
         //         //withAWS(role: "Jenkins", roleAccount: '164135465533') {
