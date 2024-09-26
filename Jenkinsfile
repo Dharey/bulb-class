@@ -47,6 +47,7 @@ pipeline {
                         # Substitute environment variables in deploy.yaml and apply to Kubernetes
                         envsubst < ${WORKSPACE}/deploy.yaml | ./kubectl apply -f -
                     '''
+                    }
                 }
             }
         }
