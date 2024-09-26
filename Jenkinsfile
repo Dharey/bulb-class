@@ -30,13 +30,13 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    kubernetesApply(configs: '${WORKSPACE}/deploy.yaml', kubeconfigId: 'k8scred')
-                }
-            }
-        }
+        // stage('Deploy to Kubernetes') {
+        //     steps {
+        //         script {
+        //             kubernetesApply(configs: '${WORKSPACE}/deploy.yaml', kubeconfigId: 'k8scred')
+        //         }
+        //     }
+        // }
 
         stage('Deploy to Kubernetes') {
             steps {
