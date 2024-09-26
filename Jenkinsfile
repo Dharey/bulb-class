@@ -9,16 +9,17 @@ pipeline {
     }
    
     stages {
-            
-            
-        stage ('Build and Push Image') {
-            steps {
-                 withDockerRegistry([credentialsId: 'docker-hub', url: ""]) {
-                   sh 'docker build -t ${REPOSITORY_TAG} .'
-                   sh 'docker push ${REPOSITORY_TAG}'          
+       stage('Docker Build & Push') {
+           steps {
+               script {
+                   withDockerRegistry(credentialsId: 'ffaac626-63cf-4189-83a8-36c94673a414', toolName: 'docker') {
+                     sh 'docker build -t ${REPOSITORY_TAG} .'
+                     sh 'docker push ${REPOSITORY_TAG}'
+                   }
+               }   
             }
-          }
-       }
+        }
+       
         stage("Install kubectl"){
             steps {
                 sh """
