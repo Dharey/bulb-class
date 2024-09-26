@@ -37,6 +37,18 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // Assuming kubectl is installed locally in the Jenkins environment
+                    sh '''
+                        # Substitute environment variables in deploy.yaml and apply to Kubernetes
+                        envsubst < ${WORKSPACE}/deploy.yaml | ./kubectl apply -f -
+                    '''
+                }
+            }
+        }
     }
 }
 
