@@ -6,9 +6,29 @@ pipeline {
         ORGANIZATION_NAME = "deetechpro"
         DOCKERHUB_USERNAME = "oluwaseyi12"
         REPOSITORY_TAG = "${DOCKERHUB_USERNAME}/${ORGANIZATION_NAME}-${SERVICE_NAME}:${BUILD_ID}"
+        SCANNER_HOME= tool 'sonar-scanner'
     }
    
     stages {
+        
+        stage('OWASP SCAN') {
+           steps {
+                dependencyCheck additionalArguments: '--scan ./ ', odcInstallation: 'Dependency_Security_Check'
+        
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        
+        stage('SonarQube') {
+           steps {
+               withSonarQubeEnv('SonarQube') {
+                   sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=bulb-class \
+                   -Dsonar.java.binaries=. \
+                   -Dsonar.projectKey=bulb-class '''
+               }
+            }
+        }
+        
        stage('Docker Build & Push') {
            steps {
                script {
@@ -45,3 +65,16 @@ pipeline {
         }
     }
 }
+        // stage('Deploy to Kubernetes') {
+        //     steps {
+        //         withKubeConfig([credentialsId: 'k8scred']) {
+        //         script {
+        //             // Assuming kubectl is installed locally in the Jenkins environment
+        //             sh '''
+        //                 # Substitute environment variables in deploy.yaml and apply to Kubernetes
+        //                 envsubst < ${WORKSPACE}/deploy.yaml | ./kubectl apply -f -
+        //             '''
+        //             }
+        //         }
+        //     }
+        // }
